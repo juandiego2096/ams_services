@@ -1,0 +1,11 @@
+export enum ROLES {
+  SELLER = 'SELLER',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  ADMIN = 'ADMIN',
+}
+
+export enum ACCESS_LEVEL {
+  DEVELOPER = 30,
+  MANTEINER = 40,
+  OWNER = 50,
+}
