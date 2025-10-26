@@ -16,9 +16,6 @@ export interface AppConfig {
     path: string;
     uploadFolder: string;
   };
-  socket: {
-    port: number;
-  };
 }
 
 export default registerAs(
@@ -38,9 +35,6 @@ export default registerAs(
     files: {
       path: process.env.FILES_PATH ?? './',
       uploadFolder: process.env.FILES_UPLOAD_FOLDER ?? '/uploads',
-    },
-    socket: {
-      port: Number(process.env.SOCKET_PORT ?? 81),
     },
   }),
 );

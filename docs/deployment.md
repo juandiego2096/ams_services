@@ -29,7 +29,6 @@ Override values (database credentials, JWT secret, etc.) inside each file.
 | `JWT_SECRET`, `JWT_EXPIRATION` | Token configuration |
 | `HASH_SALT` | bcrypt salt rounds |
 | `FILES_PATH`, `FILES_UPLOAD_FOLDER` | Base folder for uploads |
-| `SOCKET_PORT` | Socket gateway port |
 | `MYSQL_*` | Database connection parameters |
 | `MYSQL_SSL` | Enable TLS connection (`true`/`false`) |
 | `TYPEORM_SYNCHRONIZE` | Set to `true` only in disposable dev environments |

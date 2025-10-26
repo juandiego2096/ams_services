@@ -33,8 +33,4 @@ export class AppConfigService {
   get filesUploadFolder(): string {
     return this.config.files.uploadFolder;
   }
-
-  get socketPort(): number {
-    return this.config.socket.port;
-  }
 }

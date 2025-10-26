@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 const clients: { userId: string; userRole: string }[] = [];
 
-@WebSocketGateway(81, {
+@WebSocketGateway({
   cors: { origin: '*' },
 })
 @Injectable()
