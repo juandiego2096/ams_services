@@ -27,7 +27,7 @@ export class ColorController {
 
   @Post('createColor')
   async createColor(@Request() req, @Body() newColor: createColorDto): Promise<ColorEntity> {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to create a color', HttpStatus.UNAUTHORIZED);
     }
 
@@ -37,7 +37,7 @@ export class ColorController {
 
   @Patch('updateColor/:colorId')
   async updateColor(@Request() req, @Param('colorId') colorId: string, @Body() updateColor: createColorDto) {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to update a color', HttpStatus.UNAUTHORIZED);
     }
 

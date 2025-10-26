@@ -29,7 +29,7 @@ export class BreedController {
 
   @Post('createBreed')
   async createBreed(@Request() req, @Body() newBreed: createBreedDto): Promise<BreedEntity> {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to create a breed', HttpStatus.UNAUTHORIZED);
     }
 
@@ -39,7 +39,7 @@ export class BreedController {
 
   @Patch('updateBreed/:breedId')
   async updateBreed(@Request() req, @Param('breedId') breedId: string, @Body() updateBreed: createBreedDto) {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to create a breed', HttpStatus.UNAUTHORIZED);
     }
 

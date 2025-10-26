@@ -27,7 +27,7 @@ export class SpecieController {
 
   @Post('createSpecie')
   async createSpecie(@Request() req, @Body() newSpecie: createSpecieDto): Promise<SpecieEntity> {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to create a specie', HttpStatus.UNAUTHORIZED);
     }
 
@@ -37,7 +37,7 @@ export class SpecieController {
 
   @Patch('updateSpecie/:specieId')
   async updateSpecie(@Request() req, @Param('specieId') specieId: string, @Body() updateSpecie: createSpecieDto) {
-    if (req.userRole !== (ROLES.SUPER_ADMIN && ROLES.ADMIN)) {
+    if (![ROLES.SUPER_ADMIN, ROLES.ADMIN].includes(req.userRole)) {
       throw new HttpException('User not enabled to create a specie', HttpStatus.UNAUTHORIZED);
     }
 
