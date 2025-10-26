@@ -6,7 +6,7 @@ import { createNotificationDto } from './notification.type';
 import { UserEntity } from '@entities/user.entity';
 import { NOTIFICATION_TYPES } from '@constants/notifications';
 import { ROLES } from '@constants/roles';
-import { SocketGateway } from '../../gateway/socket.gateway';
+import { NotificationsPublisher } from './notifications.publisher';
 
 @Injectable()
 export class NotificationsService {
@@ -15,59 +15,51 @@ export class NotificationsService {
     private readonly notificationRepository: Repository<NotificationEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly socketGateway: SocketGateway,
+    private readonly publisher: NotificationsPublisher,
   ) {}
 
   async createNotification(notification: createNotificationDto) {
-    const roles: ROLES[] = [];
-    switch (notification.type) {
-      case NOTIFICATION_TYPES.SYSTEM:
-        roles.push(ROLES.SUPER_ADMIN);
-        roles.push(ROLES.ADMIN);
-        roles.push(ROLES.SELLER);
-        break;
-      case NOTIFICATION_TYPES.AVAILABLE:
-        roles.push(ROLES.SELLER);
-        break;
-      case NOTIFICATION_TYPES.NEW_RESERVATION:
-        roles.push(ROLES.ADMIN);
-        break;
-      case NOTIFICATION_TYPES.NEW_SELL:
-        roles.push(ROLES.ADMIN);
-        break;
-      default:
-        break;
-    }
+    const roles = this.resolveRoles(notification.type);
     const users = await this.userRepository.find({ where: { companyId: notification.companyId, role: In(roles) } });
-    users.forEach((user) => {
-      this.notificationRepository
-        .save({
+    await Promise.all(
+      users.map(async (user) => {
+        const storedNotification = await this.notificationRepository.save({
           companyId: notification.companyId,
           userId: user.id,
           creationDate: notification.date,
           type: notification.type,
           url: notification.url,
-        })
-        .then((data) => {
-          this.socketGateway.sendNewNotification(user.id, JSON.stringify(data));
         });
-    });
+        this.publisher.publish(user.id, storedNotification);
+      }),
+    );
   }
 
   async createUserNotification(notification: createNotificationDto, userId: string) {
     const user = await this.userRepository.findOne({ where: { companyId: notification.companyId, id: userId } });
     if (user) {
-      this.notificationRepository
-        .save({
-          companyId: notification.companyId,
-          userId: user.id,
-          creationDate: new Date(),
-          type: notification.type,
-          url: notification.url,
-        })
-        .then((data) => {
-          this.socketGateway.sendNewNotification(user.id, JSON.stringify(data));
-        });
+      const storedNotification = await this.notificationRepository.save({
+        companyId: notification.companyId,
+        userId: user.id,
+        creationDate: new Date(),
+        type: notification.type,
+        url: notification.url,
+      });
+      this.publisher.publish(user.id, storedNotification);
+    }
+  }
+
+  private resolveRoles(type: NOTIFICATION_TYPES): ROLES[] {
+    switch (type) {
+      case NOTIFICATION_TYPES.SYSTEM:
+        return [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SELLER];
+      case NOTIFICATION_TYPES.AVAILABLE:
+        return [ROLES.SELLER];
+      case NOTIFICATION_TYPES.NEW_RESERVATION:
+      case NOTIFICATION_TYPES.NEW_SELL:
+        return [ROLES.ADMIN];
+      default:
+        return [];
     }
   }
 
