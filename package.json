@@ -23,9 +23,9 @@
     "migration:create": "npm run typeorm -- migration:create",
     "migration:run": "npm run typeorm migration:run -- -d ./ormconfig.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d ./ormconfig.ts",
-    "seed": "ts-node ./node_modules/.bin/typeorm-extension",
-    "seed:run": "npm run seed seed:run -- -d ./ormconfig.ts",
-    "seed:create": "npm run seed seed:create -- -r ./src/seeds -n"
+    "seed": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm-extension",
+    "seed:run": "npm run seed -- seed:run -d ./ormconfig.ts",
+    "seed:create": "npm run seed -- seed:create -r ./src/seeds -n"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.7",
