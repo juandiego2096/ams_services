@@ -4,6 +4,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from '../config/app.config';
 import { ConfigurationModule } from '../config/configuration.module';
 import ofDbOptions from '../utils/config/db.config';
+
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+const envFiles = [`.env.${nodeEnv}.local`, `.env.${nodeEnv}`, '.env.local', '.env', '.env.secrets'];
 import { CompanyModule } from './company/company.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -20,7 +23,8 @@ import { NotificationModule } from './notification/notification.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.secrets'],
+      cache: true,
+      envFilePath: envFiles,
       load: [appConfig],
     }),
     TypeOrmModule.forRootAsync({
