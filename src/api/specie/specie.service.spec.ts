@@ -3,7 +3,6 @@ import { SpecieService } from './specie.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SpecieEntity } from '@entities/specie.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createSpecieDto } from './specie.type';
 
 describe('SpecieService', () => {
@@ -22,7 +21,6 @@ describe('SpecieService', () => {
       providers: [
         SpecieService,
         { provide: token, useValue: repoMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { ConfigService } from '@nestjs/config';
+import { AppConfigService } from '../../config/configuration.service';
 import { AuthResponse } from './auth.type';
 
 jest.mock('bcrypt', () => ({
@@ -20,7 +20,6 @@ import * as jsonwebtoken from 'jsonwebtoken';
 describe('AuthService', () => {
   let service: AuthService;
   let userService: jest.Mocked<UserService>;
-  let configService: jest.Mocked<ConfigService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,9 +33,16 @@ describe('AuthService', () => {
           },
         },
         {
-          provide: ConfigService,
+          provide: AppConfigService,
           useValue: {
-            get: jest.fn(),
+            jwtSecret: 'secret',
+            jwtExpiration: '1h',
+            hashSalt: 10,
+            filesPath: './',
+            filesUploadFolder: '/uploads',
+            serverPort: 3000,
+            serverHost: '0.0.0.0',
+            socketPort: 81,
           },
         },
       ],
@@ -44,7 +50,6 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     userService = module.get(UserService) as jest.Mocked<UserService>;
-    configService = module.get(ConfigService) as jest.Mocked<ConfigService>;
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -83,11 +88,6 @@ describe('AuthService', () => {
     it('should sign jwt with payload from user and config', async () => {
       const user = { id: '1', role: 'ADMIN', password: 'hash' } as any;
       userService.getUserById.mockResolvedValue(user);
-      configService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'JWT_SECRET') return 'secret';
-        if (key === 'JWT_EXPIRATION') return '1h';
-        return defaultValue;
-      });
       (jsonwebtoken.sign as jest.Mock).mockReturnValue('token');
 
       const result = (await service.generateJWT(user)) as AuthResponse;

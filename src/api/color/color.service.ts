@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ColorEntity } from '@entities/color.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createColorDto } from './color.type';
 
@@ -10,7 +9,6 @@ export class ColorService {
   constructor(
     @InjectRepository(ColorEntity)
     private readonly colorRepository: Repository<ColorEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async getColors(): Promise<ColorEntity[]> {

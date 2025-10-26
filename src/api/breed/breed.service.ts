@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BreedEntity } from '@entities/breed.entity';
@@ -10,7 +9,6 @@ export class BreedService {
   constructor(
     @InjectRepository(BreedEntity)
     private readonly breedRepository: Repository<BreedEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async getBreedsBySpecieId(specieId: string, specieRelation = true): Promise<BreedEntity[]> {

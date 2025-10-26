@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionEntity } from '@entities/transaction.entity';
 import { In, Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { TRANSACTION_STATUS, TRANSACTION_TYPES } from '@constants/animals';
 import { createAnimalTransactionDto } from './transaction.type';
 import { FileEntity } from '@entities/file.entity';
@@ -12,7 +11,6 @@ export class TransactionService {
   constructor(
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async createTransaction(transaction: createAnimalTransactionDto, transactionPictures: FileEntity[] = []): Promise<TransactionEntity> {

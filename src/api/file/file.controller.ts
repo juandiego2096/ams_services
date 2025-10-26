@@ -3,15 +3,15 @@ import { FileService } from './file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
 import { createFileDto } from './file.type';
 import { AuthGuard } from '../auth/auth.guard';
 import path from 'path';
 import { fileDestination } from './file.interceptor';
+import { AppConfigService } from '../../config/configuration.service';
 
 @Controller('files')
 export class FileController {
-  constructor(private readonly fileService: FileService, private readonly configService: ConfigService) {}
+  constructor(private readonly fileService: FileService, private readonly configService: AppConfigService) {}
 
   @UseGuards(AuthGuard)
   @Post('upload')
@@ -38,7 +38,7 @@ export class FileController {
   @Get(':fileId')
   async getFile(@Res() res: Response, @Param('fileId') fileId: string) {
     const file = await this.fileService.getFile(fileId);
-    if (file) res.sendFile(this.configService.get<string>('FILES_PATH', './') + this.configService.get('FILES_UPLOAD_FOLDER', '/uploads') + file.filename);
+    if (file) res.sendFile(`${this.configService.filesPath}${this.configService.filesUploadFolder}${file.filename}`);
     return null;
   }
 }

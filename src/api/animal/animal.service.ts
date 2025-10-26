@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AnimalEntity } from '@entities/animal.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createAnimalDto, createAnimalFileDto } from './animal.type';
 import { FileEntity } from '@entities/file.entity';
 
@@ -11,7 +10,6 @@ export class AnimalService {
   constructor(
     @InjectRepository(AnimalEntity)
     private readonly animalRepository: Repository<AnimalEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async createAnimal(animal: createAnimalDto, animalPictures: FileEntity[] = []): Promise<AnimalEntity> {

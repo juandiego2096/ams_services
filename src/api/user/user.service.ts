@@ -4,18 +4,18 @@ import { UserEntity } from '@entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, UserResponseDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
+import { AppConfigService } from '../../config/configuration.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly configService: ConfigService,
+    private readonly configService: AppConfigService,
   ) {}
 
   async createUser(user: CreateUserDto): Promise<UserResponseDto> {
-    const newPassword = await bcrypt.hash(user.password, +this.configService.get<number>('HASH_SALT', 0));
+    const newPassword = await bcrypt.hash(user.password, this.configService.hashSalt);
     return this.userRepository.save({
       role: user.role,
       username: user.username,
@@ -60,7 +60,7 @@ export class UserService {
 
   async updateUser(user: UserEntity, newPassword: boolean) {
     if (newPassword) {
-      const hashedPassword = await bcrypt.hash(user.password, +this.configService.get<number>('HASH_SALT', 0));
+      const hashedPassword = await bcrypt.hash(user.password, this.configService.hashSalt);
       user.password = hashedPassword;
     }
 

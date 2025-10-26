@@ -3,7 +3,6 @@ import { BreedService } from './breed.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BreedEntity } from '@entities/breed.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createBreedDto } from './breed.type';
 
 describe('BreedService', () => {
@@ -23,7 +22,6 @@ describe('BreedService', () => {
       providers: [
         BreedService,
         { provide: token, useValue: repoMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

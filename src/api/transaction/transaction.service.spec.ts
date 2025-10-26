@@ -3,7 +3,6 @@ import { TransactionService } from './transaction.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { TransactionEntity } from '@entities/transaction.entity';
 import { Repository, In } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createAnimalTransactionDto } from './transaction.type';
 import { TRANSACTION_STATUS, TRANSACTION_TYPES } from '@constants/animals';
 import { FileEntity } from '@entities/file.entity';
@@ -23,7 +22,6 @@ describe('TransactionService', () => {
       providers: [
         TransactionService,
         { provide: getRepositoryToken(TransactionEntity), useValue: repositoryMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

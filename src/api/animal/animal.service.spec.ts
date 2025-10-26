@@ -3,7 +3,6 @@ import { AnimalService } from './animal.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { AnimalEntity } from '@entities/animal.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createAnimalDto } from './animal.type';
 import { FileEntity } from '@entities/file.entity';
 import { STATUS, GENDERS } from '@constants/animals';
@@ -23,7 +22,6 @@ describe('AnimalService', () => {
       providers: [
         AnimalService,
         { provide: getRepositoryToken(AnimalEntity), useValue: repositoryMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

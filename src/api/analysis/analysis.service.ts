@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionEntity } from '@entities/transaction.entity';
 import { Between, Repository } from 'typeorm';
@@ -11,7 +10,6 @@ export class AnalysisService {
   constructor(
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async getSalesAnalysisResume(companyId: string, userId: string | null = null): Promise<salesAnalysisResume | undefined> {

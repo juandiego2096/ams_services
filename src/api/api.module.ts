@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import appConfig from '../config/app.config';
+import { ConfigurationModule } from '../config/configuration.module';
 import ofDbOptions from '../utils/config/db.config';
 import { CompanyModule } from './company/company.module';
 import { UserModule } from './user/user.module';
@@ -16,14 +18,16 @@ import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', '.env.secrets'],
+      load: [appConfig],
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: ofDbOptions,
     }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '.env.secrets'],
-    }),
+    ConfigurationModule,
     CompanyModule,
     UserModule,
     AuthModule,

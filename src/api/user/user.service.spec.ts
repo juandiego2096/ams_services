@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '@entities/user.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
+import { AppConfigService } from '../../config/configuration.service';
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
@@ -14,7 +14,7 @@ import * as bcrypt from 'bcrypt';
 describe('UserService', () => {
   let service: UserService;
   let repository: jest.Mocked<Repository<UserEntity>>;
-  let configService: jest.Mocked<ConfigService>;
+  let configService: jest.Mocked<AppConfigService>;
   const token = getRepositoryToken(UserEntity);
 
   beforeEach(async () => {
@@ -29,9 +29,16 @@ describe('UserService', () => {
         UserService,
         { provide: token, useValue: repoMock },
         {
-          provide: ConfigService,
+          provide: AppConfigService,
           useValue: {
-            get: jest.fn(),
+            hashSalt: 10,
+            jwtSecret: 'secret',
+            jwtExpiration: '1h',
+            filesPath: './',
+            filesUploadFolder: '/uploads',
+            serverPort: 3000,
+            serverHost: '0.0.0.0',
+            socketPort: 81,
           },
         },
       ],
@@ -39,8 +46,7 @@ describe('UserService', () => {
 
     service = module.get<UserService>(UserService);
     repository = module.get(token);
-    configService = module.get(ConfigService) as jest.Mocked<ConfigService>;
-    configService.get.mockImplementation(() => 10 as any);
+    configService = module.get(AppConfigService) as jest.Mocked<AppConfigService>;
   });
 
   afterEach(() => jest.clearAllMocks());

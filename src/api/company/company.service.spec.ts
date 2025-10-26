@@ -3,7 +3,6 @@ import { CompanyService } from './company.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CompanyEntity } from '@entities/company.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createCompanyDto } from './company.type';
 
 describe('CompanyService', () => {
@@ -22,7 +21,6 @@ describe('CompanyService', () => {
       providers: [
         CompanyService,
         { provide: token, useValue: repoMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

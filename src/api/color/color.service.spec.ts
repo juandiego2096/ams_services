@@ -3,7 +3,6 @@ import { ColorService } from './color.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ColorEntity } from '@entities/color.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createColorDto } from './color.type';
 
 describe('ColorService', () => {
@@ -23,7 +22,6 @@ describe('ColorService', () => {
       providers: [
         ColorService,
         { provide: token, useValue: repoMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

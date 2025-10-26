@@ -4,14 +4,14 @@ import { UserService } from '../user/user.service';
 import { AuthResponse, AuthTokenResult, PayloadToken } from './auth.type';
 import { UserResponseDto } from '../user/user.dto';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
 import { decode } from 'jsonwebtoken';
+import { AppConfigService } from '../../config/configuration.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly configService: ConfigService,
+    private readonly configService: AppConfigService,
   ) {}
 
   public async validateUser(username: string, password: string): Promise<UserResponseDto | null> {
@@ -52,8 +52,8 @@ export class AuthService {
     return {
       accessToken: this.signJWT({
         payload,
-        secret: this.configService.get<string>('JWT_SECRET', ''),
-        expires: this.configService.get<string>('JWT_EXPIRATION', '1h'),
+        secret: this.configService.jwtSecret,
+        expires: this.configService.jwtExpiration,
       }),
       user,
     };

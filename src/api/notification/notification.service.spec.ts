@@ -4,7 +4,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotificationEntity } from '@entities/notification.entity';
 import { UserEntity } from '@entities/user.entity';
 import { Repository, In } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { SocketGateway } from '../../gateway/socket.gateway';
 import { NOTIFICATION_TYPES } from '@constants/notifications';
 
@@ -33,7 +32,6 @@ describe('NotificationsService', () => {
         NotificationsService,
         { provide: notificationToken, useValue: notificationRepoMock },
         { provide: userToken, useValue: userRepoMock },
-        { provide: ConfigService, useValue: {} },
         {
           provide: SocketGateway,
           useValue: {

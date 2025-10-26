@@ -3,7 +3,6 @@ import { AnalysisService } from './analysis.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { TransactionEntity } from '@entities/transaction.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 
 describe('AnalysisService', () => {
   let service: AnalysisService;
@@ -20,7 +19,6 @@ describe('AnalysisService', () => {
       providers: [
         AnalysisService,
         { provide: repositoryToken, useValue: repoMock },
-        { provide: ConfigService, useValue: {} },
       ],
     }).compile();
 

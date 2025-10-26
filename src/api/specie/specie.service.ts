@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SpecieEntity } from '@entities/specie.entity';
 import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createSpecieDto } from './specie.type';
 
 @Injectable()
@@ -10,7 +9,6 @@ export class SpecieService {
   constructor(
     @InjectRepository(SpecieEntity)
     private readonly specieRepository: Repository<SpecieEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   async getSpecies(): Promise<SpecieEntity[]> {

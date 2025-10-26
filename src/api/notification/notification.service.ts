@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { NotificationEntity } from '@entities/notification.entity';
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
 import { createNotificationDto } from './notification.type';
 import { UserEntity } from '@entities/user.entity';
 import { NOTIFICATION_TYPES } from '@constants/notifications';
@@ -16,7 +15,6 @@ export class NotificationsService {
     private readonly notificationRepository: Repository<NotificationEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly configService: ConfigService,
     private readonly socketGateway: SocketGateway,
   ) {}
 
