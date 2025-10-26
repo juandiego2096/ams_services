@@ -74,7 +74,7 @@ export class AnimalService {
 
   async getAnimalById(animalId: string, companyId: string, picturesRelation = true): Promise<AnimalEntity | null> {
     const relations: string[] = [];
-    if (picturesRelation) relations.push('pictures');
+    if (picturesRelation) relations.push('pictures', 'breed', 'color', 'specie');
     return this.animalRepository.findOne({
       where: { id: animalId, companyId: companyId },
       relations: relations,

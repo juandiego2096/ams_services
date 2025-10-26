@@ -80,6 +80,10 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^@constants/(.*)$": "<rootDir>/constants/$1",
+      "^@entities/(.*)$": "<rootDir>/entities/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

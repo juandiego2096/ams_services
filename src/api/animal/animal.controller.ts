@@ -58,7 +58,7 @@ export class AnimalController {
     animal.breedId = updateAnimal.breedId;
     animal.colorId = updateAnimal.colorId;
     animal.gender = updateAnimal.gender;
-    animal.birthDate = updateAnimal.birthDate;
+    animal.birthDate = new Date(updateAnimal.birthDate);
     animal.price = updateAnimal.price;
     for (const element of updateAnimal.pictures) {
       const file = await this.fileService.getFile(element);
