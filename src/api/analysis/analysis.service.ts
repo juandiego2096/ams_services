@@ -19,15 +19,15 @@ export class AnalysisService {
       .addSelect('SUM(currentTransactions.totalTransaction) as currentTotal')
       .addSelect("DATE_FORMAT(NOW(), '%Y-%m-01') AS currentDateStart")
       .addSelect('LAST_DAY(CURDATE()) as currentDateEnd')
-      .addSelect('previousMonth.quantity AS previousQuantity')
-      .addSelect('previousMonth.total AS previousTotal')
-      .addSelect('previousMonth.dateStart AS previousDateStart')
-      .addSelect('previousMonth.dateEnd AS previousDateEnd')
+      .addSelect('IFNULL(MAX(previousMonth.quantity), 0) AS previousQuantity')
+      .addSelect('IFNULL(MAX(previousMonth.total), 0) AS previousTotal')
+      .addSelect('MAX(previousMonth.dateStart) AS previousDateStart')
+      .addSelect('MAX(previousMonth.dateEnd) AS previousDateEnd')
       .addSelect(
-        'IF(previousMonth.quantity = 0 AND count(currentTransactions.id) > 0, 100, IFNULL(((count(currentTransactions.id) - previousMonth.quantity) / previousMonth.quantity * 100), 0)) AS quantityPercentage',
+        'IF(MAX(previousMonth.quantity) = 0 AND COUNT(currentTransactions.id) > 0, 100, IFNULL(((COUNT(currentTransactions.id) - MAX(previousMonth.quantity)) / NULLIF(MAX(previousMonth.quantity), 0) * 100), 0)) AS quantityPercentage',
       )
       .addSelect(
-        'IF(previousMonth.total = 0 AND SUM(currentTransactions.totalTransaction) > 0, 100, IFNULL(((SUM(currentTransactions.totalTransaction) - previousMonth.total) / previousMonth.total * 100), 0) ) AS totalPercentage',
+        'IF(MAX(previousMonth.total) = 0 AND SUM(currentTransactions.totalTransaction) > 0, 100, IFNULL(((SUM(currentTransactions.totalTransaction) - MAX(previousMonth.total)) / NULLIF(MAX(previousMonth.total), 0) * 100), 0) ) AS totalPercentage',
       )
       .leftJoin(
         (subQuery) => {
