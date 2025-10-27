@@ -6,6 +6,7 @@ import { UserResponseDto } from '../user/user.dto';
 import * as bcrypt from 'bcrypt';
 import { decode } from 'jsonwebtoken';
 import { AppConfigService } from '../../config/configuration.service';
+import { extractAuthToken } from './auth.utils';
 
 @Injectable()
 export class AuthService {
@@ -59,7 +60,8 @@ export class AuthService {
     };
   }
 
-  public async getUserFromAuthToken(authToken: string) {
+  public async getUserFromAuthToken(authHeader: unknown) {
+    const authToken = extractAuthToken(authHeader);
     const decodedAuthToken = decode(authToken) as AuthTokenResult;
     if (!decodedAuthToken || typeof decodedAuthToken === 'string') {
       console.log('Cannot decode jwt token');

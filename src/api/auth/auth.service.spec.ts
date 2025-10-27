@@ -92,11 +92,7 @@ describe('AuthService', () => {
 
       const result = (await service.generateJWT(user)) as AuthResponse;
 
-      expect(jsonwebtoken.sign).toHaveBeenCalledWith(
-        { role: 'ADMIN', user: '1' },
-        'secret',
-        expect.objectContaining({ expiresIn: '1h' }),
-      );
+      expect(jsonwebtoken.sign).toHaveBeenCalledWith({ role: 'ADMIN', user: '1' }, 'secret', expect.objectContaining({ expiresIn: '1h' }));
       expect(result.accessToken).toBe('token');
       expect(result.user).toBe(user);
     });
@@ -115,7 +111,18 @@ describe('AuthService', () => {
 
       const result = await service.getUserFromAuthToken('token');
 
+      expect(jsonwebtoken.decode).toHaveBeenCalledWith('token');
       expect(result).toEqual({ userId: '1', userRole: 'SELLER' });
+    });
+
+    it('should accept Bearer prefixed authorization header', async () => {
+      (jsonwebtoken.decode as jest.Mock).mockReturnValue({ user: '3' });
+      userService.getUserById.mockResolvedValue({ id: '3', role: 'SELLER' } as any);
+
+      const result = await service.getUserFromAuthToken('Bearer token-3');
+
+      expect(jsonwebtoken.decode).toHaveBeenCalledWith('token-3');
+      expect(result).toEqual({ userId: '3', userRole: 'SELLER' });
     });
 
     it('should return null when decode fails', async () => {

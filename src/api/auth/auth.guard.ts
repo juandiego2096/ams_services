@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { decode } from 'jsonwebtoken';
 import { IUseToken, AuthTokenResult } from './auth.type';
 import { UserService } from '../user/user.service';
+import { extractAuthToken } from './auth.utils';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -9,9 +10,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const authToken = request.headers['authorization'];
-    if (!authToken) throw new UnauthorizedException('token in "authorization" header is not provided');
-
+    const authToken = extractAuthToken(request.headers['authorization']);
     const decodedAuthToken = decode(authToken) as AuthTokenResult;
     if (!decodedAuthToken || typeof decodedAuthToken === 'string') {
       throw new UnauthorizedException('Cannot decode jwt token');
