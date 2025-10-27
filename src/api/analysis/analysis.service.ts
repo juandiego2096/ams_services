@@ -17,7 +17,7 @@ export class AnalysisService {
       .createQueryBuilder('currentTransactions')
       .select('COUNT(currentTransactions.id) as currentQuantity')
       .addSelect('SUM(currentTransactions.totalTransaction) as currentTotal')
-      .addSelect('DATE_FORMAT(creationDate ,"%Y-%m-01") currentDateStart')
+      .addSelect("DATE_FORMAT(currentTransactions.creationDate, '%Y-%m-01') AS currentDateStart")
       .addSelect('last_day(creationDate) as currentDateEnd')
       .addSelect('previousMonth.quantity AS previousQuantity')
       .addSelect('previousMonth.total AS previousTotal')
@@ -34,11 +34,11 @@ export class AnalysisService {
           return subQuery
             .select('COUNT(previousTransactions.id) as quantity')
             .addSelect('IFNULL(SUM(previousTransactions.totalTransaction), 0) as total')
-            .addSelect('DATE_FORMAT(NOW() - INTERVAL 1 MONTH ,"%Y-%m-01") dateStart')
-            .addSelect('DATE_FORMAT(LAST_DAY(NOW() - INTERVAL 1 MONTH), "%Y-%m-%d") as dateEnd')
+            .addSelect("DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') AS dateStart")
+            .addSelect("DATE_FORMAT(LAST_DAY(NOW() - INTERVAL 1 MONTH), '%Y-%m-%d') as dateEnd")
             .from(TransactionEntity, 'previousTransactions')
             .where(
-              'previousTransactions.companyId = :companyId AND previousTransactions.type = 1 AND previousTransactions.status = 2 AND previousTransactions.creationDate between DATE_FORMAT(NOW() - INTERVAL 1 MONTH ,"%Y-%m-01") AND DATE_FORMAT(LAST_DAY(NOW() - INTERVAL 1 MONTH), "%Y-%m-%d")',
+              "previousTransactions.companyId = :companyId AND previousTransactions.type = 1 AND previousTransactions.status = 2 AND previousTransactions.creationDate between DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') AND DATE_FORMAT(LAST_DAY(NOW() - INTERVAL 1 MONTH), '%Y-%m-%d')",
               { companyId },
             )
             .andWhere('IF(:userId is NULL, 1, previousTransactions.userId = :userId)', { userId });
@@ -47,7 +47,7 @@ export class AnalysisService {
         'previousMonth.quantity >= 0',
       )
       .where(
-        'currentTransactions.companyId = :companyId AND currentTransactions.type = 1 AND currentTransactions.status = 2 AND currentTransactions.creationDate between DATE_FORMAT(NOW() ,"%Y-%m-01") AND last_day(curdate())',
+        "currentTransactions.companyId = :companyId AND currentTransactions.type = 1 AND currentTransactions.status = 2 AND currentTransactions.creationDate between DATE_FORMAT(NOW(), '%Y-%m-01') AND last_day(curdate())",
         { companyId },
       )
       .andWhere('IF(:userId is NULL, 1, currentTransactions.userId = :userId)', { userId })
