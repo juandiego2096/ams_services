@@ -1,7 +1,8 @@
 import { config } from 'dotenv';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { SeederOptions } from 'typeorm-extension';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const envFiles = [`.env.${nodeEnv}.local`, `.env.${nodeEnv}`, '.env.local', '.env', '.env.secrets'];
@@ -18,7 +19,7 @@ const runMigrationsEnv = process.env.TYPEORM_RUN_MIGRATIONS;
 const synchronize = synchronizeEnv ? synchronizeEnv === 'true' : nodeEnv !== 'production';
 const migrationsRun = runMigrationsEnv ? runMigrationsEnv === 'true' : nodeEnv !== 'development';
 
-export const datasource = new DataSource({
+const options: DataSourceOptions & SeederOptions = {
   type: 'mysql',
   host: process.env.MYSQL_HOST || 'localhost',
   port: Number(process.env.MYSQL_PORT || 3306),
@@ -30,4 +31,8 @@ export const datasource = new DataSource({
   synchronize,
   migrationsRun,
   ssl: process.env.MYSQL_SSL === 'true',
-});
+  seeds: ['src/seeds/**/*{.ts,.js}'],
+  factories: ['src/factories/**/*{.ts,.js}'],
+};
+
+export const datasource = new DataSource(options);
