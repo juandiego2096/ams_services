@@ -7,7 +7,7 @@ export default class UserSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {
     const repository = dataSource.getRepository(UserEntity);
 
-    await repository.clear();
+    await repository.delete({});
 
     await repository.insert([
       {

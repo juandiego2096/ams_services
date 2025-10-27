@@ -55,7 +55,7 @@ NODE_ENV=staging npm run migration:revert
 NODE_ENV=development npm run seed:run
 ```
 
-> If the database already exists from `synchronize`, generate an initial migration to capture the baseline schema before turning `TYPEORM_SYNCHRONIZE` off in shared environments.
+> The main seeder (`src/seeds/index.ts`) empties tables in dependency order (`transaction_file`, `transaction`, `animal_file`, `animal`, `notification`, `user`, `company`) before inserting the demo records. Run it only on disposable/dev databases because it wipes existing data. If the database already exists from `synchronize`, generate an initial migration to capture the baseline schema before turning `TYPEORM_SYNCHRONIZE` off in shared environments.
 
 ## 3. Deployment workflow
 
@@ -73,6 +73,7 @@ NODE_ENV=development npm run seed:run
    ```bash
    NODE_ENV=<env> npm run seed:run
    ```
+   This command will delete data from the tables listed above prior to inserting the baseline records; avoid running it against live data sets.
 5. Start the service:
    ```bash
    NODE_ENV=<env> npm run start:prod

@@ -7,7 +7,7 @@ export default class CompanySeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {
     const repository = dataSource.getRepository(CompanyEntity);
 
-    await repository.clear();
+    await repository.delete({});
 
     await repository.insert([
       {
